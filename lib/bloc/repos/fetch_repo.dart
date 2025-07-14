@@ -4,13 +4,18 @@ import 'package:doi2bibtex/api/bib_resolver.dart';
 import 'package:doi2bibtex/bloc/providers/doi_dest_provider.dart';
 import 'package:doi2bibtex/bloc/providers/resolvers/crossref.dart';
 import 'package:doi2bibtex/bloc/providers/resolvers/ieee.dart';
+import 'package:doi2bibtex/bloc/providers/resolvers/springer.dart';
 
 class BibTeXRepo {
   final _dio = Dio();
 
   final _doiDestProvider = DOIDestProvider();
 
-  final _bibResolvers = [CrossrefResolver(), IEEEResolver()];
+  final _bibResolvers = [
+    CrossrefResolver(),
+    IEEEResolver(),
+    SpringerResolver(),
+  ];
 
   Future<Uri?> resolveDOI(String doi) async {
     return await _doiDestProvider.resolveDOI(_dio, doi);
