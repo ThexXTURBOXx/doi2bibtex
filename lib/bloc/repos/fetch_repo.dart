@@ -12,12 +12,15 @@ class BibTeXRepo {
 
   final _bibResolvers = [CrossrefResolver(), IEEEResolver()];
 
-  Future<List<String>> fetchDOI(String doi) async {
-    final loc = await _doiDestProvider.resolveDOI(_dio, doi);
+  Future<Uri?> resolveDOI(String doi) async {
+    return await _doiDestProvider.resolveDOI(_dio, doi);
+  }
+
+  Future<List<String>> fetchDOI(String doi, [Uri? resolved]) async {
     final bibtexs = _bibResolvers
-        .where((p) => p.shouldResolve(doi, loc))
-        .sortedBy((p) => p.getPriority(doi, loc))
-        .map((p) => tryResolveDOI(p, _dio, doi, loc))
+        .where((p) => p.shouldResolve(doi, resolved))
+        .sortedBy((p) => p.getPriority(doi, resolved))
+        .map((p) => tryResolveDOI(p, _dio, doi, resolved))
         .toList(growable: false);
 
     var ret = <String>[];

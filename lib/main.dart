@@ -2,6 +2,7 @@ import 'package:clipboard/clipboard.dart';
 import 'package:doi2bibtex/bloc/bloc_provider.dart';
 import 'package:doi2bibtex/bloc/cubits/fetch_bloc.dart';
 import 'package:doi2bibtex/bloc/states.dart';
+import 'package:doi2bibtex/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -62,7 +63,8 @@ class _MyHomePageState extends State<MyHomePage> {
           //TODO: remove
           initialValue: '10.1109/TEST.1999.805864',
           onFieldSubmitted: (doiField) {
-            final doi = Uri.tryParse(doiField)?.path ?? doiField;
+            var doi = Uri.tryParse(doiField)?.path ?? doiField;
+            doi = trim(doi.trim(), '/');
             fetch(context, doi);
           },
         ),
@@ -94,6 +96,17 @@ class _MyHomePageState extends State<MyHomePage> {
               );
             }
           },
+        ),
+        Spacer(),
+        ExpansionTile(
+          title: const Text('Extra details'),
+          children: [
+            SelectableText(
+              'doi: ${state.doi}\n'
+              'resolved: ${state.resolved}\n'
+              'bibtexs: ${state.bibtexs}',
+            ),
+          ],
         ),
       ],
     );

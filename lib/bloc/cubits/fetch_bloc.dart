@@ -14,9 +14,13 @@ class FetchCubit extends Cubit<FetchState> {
   final Dio dio = Dio();
 
   Future<void> fetchDOI(String doi) async {
-    emit(state.copyWith(state: AppState.fetching));
+    emit(state.copyWith(state: AppState.fetching, doi: doi));
     try {
-      final bibtexs = await _bibtexRepo.fetchDOI(doi);
+      final resolved = await _bibtexRepo.resolveDOI(doi);
+      emit(state.copyWith(resolved: resolved));
+
+      final bibtexs = await _bibtexRepo.fetchDOI(doi, resolved);
+      emit(state.copyWith(bibtexs: bibtexs));
 
       var merged = '';
       for (final bibtex in bibtexs) {
