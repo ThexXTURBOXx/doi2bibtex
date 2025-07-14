@@ -5,18 +5,18 @@ import 'package:dio/dio.dart';
 const noCorsPrefix =
     'https://cloudflare-cors-anywhere.nicomexis-nm.workers.dev/?';
 
-Future<Response<T>> postNoCors<T>(
+Future<Response<T>> postNoCorsUri<T>(
   Dio dio,
-  String uri, {
+  Uri uri, {
   Map<String, dynamic>? extraHeaders,
   Object? data,
   Options? options,
   CancelToken? cancelToken,
   ProgressCallback? onSendProgress,
   ProgressCallback? onReceiveProgress,
-}) async => postNoCorsUri(
+}) async => postNoCors(
   dio,
-  Uri.parse(uri),
+  uri.toString(),
   extraHeaders: extraHeaders,
   data: data,
   options: options,
@@ -25,9 +25,9 @@ Future<Response<T>> postNoCors<T>(
   onReceiveProgress: onReceiveProgress,
 );
 
-Future<Response<T>> postNoCorsUri<T>(
+Future<Response<T>> postNoCors<T>(
   Dio dio,
-  Uri uri, {
+  String uri, {
   Map<String, dynamic>? extraHeaders,
   Object? data,
   Options? options,
@@ -42,7 +42,7 @@ Future<Response<T>> postNoCorsUri<T>(
   }
 
   return dio.postUri(
-    Uri.parse('$noCorsPrefix$uri'),
+    Uri.parse('$noCorsPrefix${Uri.encodeComponent(uri)}'),
     data: data,
     options: options,
     cancelToken: cancelToken,
